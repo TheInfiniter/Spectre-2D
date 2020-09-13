@@ -14,10 +14,12 @@ namespace Spectre
         private double amp, dispX, dispY;
         private int centerX, centerY;
 
-        private double[,] picture, noise, noisedPicture, spectreToDraw;
+        private double[,] picture, noise, noisedPicture, interpolatePicture;
+        //private double[] interLineBefore, interColumnBefore, interLineAfter, interColumnAfter;
 
-        Complex[,] spectre, spectreBuffer, pic;
+        Complex[,] spectre, spectreBuffer, complexPic;
         Complex[] line, column;
+
         Complex buf;
 
         Random rand;
@@ -43,26 +45,10 @@ namespace Spectre
 
             noisePercent = Convert.ToDouble(txtNoisePercent.Text) / 100;
 
-            // является ли ширина картинки степенью двойки?
-            if (!IsPowerOfTwo(picWidth))
-                spectreWidth = PowerOfTwo(picWidth); // если нет, то находим ближайшую превосходящую степень
-            else 
-                spectreWidth = picWidth; // если да, то просто даем спектру такое же значение
-
-            // является ли высота картинки степенью двойки?
-            if (!IsPowerOfTwo(picHeight))
-                spectreHeight = PowerOfTwo(picHeight); // если нет, то находим ближайшую превосходящую степень
-            else
-                spectreHeight = picHeight; // если да, то просто даем спектру такое же значение
-
-            // потом еще сюда надо будет добавить интерполяцию до степени двойки
-
             // выделяем место
             picture = new double[picHeight, picWidth];
             noise = new double[picHeight, picWidth];
             noisedPicture = new double[picHeight, picWidth];
-
-            spectreToDraw = new double[spectreWidth, spectreHeight];
 
             for(int k = 0; k < amount; k++)
             {
@@ -105,7 +91,37 @@ namespace Spectre
                 }
             }
 
-            DrawMatrix(pcbInitial, noisedPicture, picHeight, picWidth);
+            interpolatePicture = noisedPicture;
+
+            // является ли ширина картинки степенью двойки?
+            if (!IsPowerOfTwo(picWidth))
+            {
+                spectreWidth = PowerOfTwo(picWidth); // если нет, то находим ближайшую превосходящую степень
+                interpolatePicture = InterpolateWidth(noisedPicture, spectreWidth);
+            }
+            else
+            {
+                spectreWidth = picWidth; // если да, то просто даем спектру такое же значение
+                //interpolatePicture = noisedPicture;
+            }
+
+            // является ли высота картинки степенью двойки?
+            if (!IsPowerOfTwo(picHeight))
+            {
+                spectreHeight = PowerOfTwo(picHeight); // если нет, то находим ближайшую превосходящую степень
+            }
+            else
+            {
+                spectreHeight = picHeight; // если да, то просто даем спектру такое же значение
+            }
+
+            // проводим интерполяцию
+            //interpolatePicture = InterpolateMatrix(noisedPicture, spectreWidth, spectreHeight);
+
+            DrawMatrix(pcbInitial, interpolatePicture, spectreHeight, spectreWidth);
+
+            labelWidth.Text = interpolatePicture.GetLength(0).ToString();
+            labelHeight.Text = interpolatePicture.GetLength(1).ToString();
 
             btnCreateSpectre.Enabled = true;
         }
@@ -114,7 +130,7 @@ namespace Spectre
         {
             Complex buffer;
 
-            pic = new Complex[spectreWidth, spectreHeight];
+            complexPic = new Complex[spectreWidth, spectreHeight];
             spectre = new Complex[spectreWidth, spectreHeight];
             spectreBuffer = new Complex[spectreWidth, spectreHeight];
 
@@ -126,7 +142,7 @@ namespace Spectre
                 for (int j = 0; j < spectreWidth; j++)
                 {
                     buffer = new Complex(noisedPicture[i, j], 0);
-                    spectre[i, j] = pic[i, j] = buffer;
+                    spectre[i, j] = complexPic[i, j] = buffer;
                 }
             }
 
@@ -163,6 +179,16 @@ namespace Spectre
             }
 
             DrawMatrix(pcbSpectre, ConvertToDraw(spectre, spectreHeight, spectreWidth), spectreHeight, spectreWidth);
+        }
+
+        private void btnFilter_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnStretch_Click(object sender, EventArgs e)
+        {
+
         }
 
         double[,] ConvertToDraw(Complex[,] arr, int height, int width)
@@ -253,6 +279,111 @@ namespace Spectre
         }
 
         /// <summary>
+        /// Растягивает матрицу до указанных значений ширины/высоты.
+        /// </summary>
+        /// <param name="source">Исходная матрица.</param>
+        /// <param name="requiredWidth">Требуемая ширина.</param>
+        /// <param name="requiredHeight">Требуемая высота.</param>
+        /// <returns>Растянутая до указанных значений матрица.</returns>
+        private double[,] InterpolateMatrix(double[,] source, int requiredWidth, int requiredHeight)
+        {
+            double[,] result = new double[requiredHeight, requiredWidth];
+
+            // итерация по строкам матрицы
+            double[] bufferBefore = new double[source.GetLength(0)];
+            double[] bufferAfter = new double[requiredWidth];
+
+            for (int i = 0; i < source.GetLength(1); i++)
+            {
+                for (int j = 0; j < source.GetLength(0); j++)
+                {
+                    bufferBefore[j] = source[j, i];
+                }
+
+                bufferAfter = InterpolateArray(bufferBefore, requiredHeight);
+
+                for (int j = 0; j < requiredHeight; j++)
+                {
+                    result[j, i] = bufferAfter[j];
+                }
+            }
+
+            bufferBefore = new double[source.GetLength(1)];
+            bufferAfter = new double[requiredWidth];
+
+            for (int i = 0; i < requiredWidth; i++)
+            {
+                for (int j = 0; j < source.GetLength(1); j++)
+                {
+                    bufferBefore[j] = source[i, j];
+                }
+
+                bufferAfter = InterpolateArray(bufferBefore, requiredWidth);
+
+                for (int j = 0; j < requiredWidth; j++)
+                {
+                    result[j, i] = bufferAfter[j];
+                }
+            }
+
+            /*
+            // итерация по столбцам матрицы
+            bufferBefore = new double[source.GetLength(1)];
+            bufferAfter = new double[requiredHeight];
+
+            for (int j = 0; j < requiredHeight; j++)
+            {
+                for (int i = 0; i < source.GetLength(0); i++)
+                {
+                    bufferBefore[i] = result[i, j];
+                }
+
+                bufferAfter = InterpolateArray(bufferBefore, requiredWidth);
+
+                for (int i = 0; i < requiredWidth; i++)
+                {
+                    result[i, j] = bufferAfter[i];
+                }
+            }
+            */
+
+            return result;
+        }
+
+        private double[,] InterpolateWidth(double[,] source, int requiredWidth)
+        {
+            double[,] result = new double[source.GetLength(1), requiredWidth];
+
+            // итерация по строкам матрицы
+            double[] bufferBefore = new double[source.GetLength(0)];
+            double[] bufferAfter = new double[requiredWidth];
+
+            for (int i = 0; i < source.GetLength(1); i++)
+            {
+                for (int j = 0; j < source.GetLength(0); j++)
+                {
+                    bufferBefore[j] = source[j, i];
+                }
+
+                bufferAfter = InterpolateArray(bufferBefore, requiredWidth);
+
+                for (int j = 0; j < requiredWidth; j++)
+                {
+                    result[i, j] = bufferAfter[j];
+                }
+            }
+
+            return result;
+        }
+
+        private double[,] InterpolateHeight(double[,] source, int requiredHeight)
+        {
+            double[,] result = new double[requiredHeight, source.GetLength(0)];
+
+            return result;
+        }
+
+        /// <summary>
         /// Возвращает случайное число в диапазоне.
         /// </summary>
         /// <param name="minimum">Левая граница диапазона.</param>
@@ -282,6 +413,29 @@ namespace Spectre
         public int PowerOfTwo(int digit)
         {
             return (int)Math.Pow(2, Math.Ceiling(Math.Log(digit, 2)));
+        }
+
+        /// <summary>
+        /// Растягивает массив данных.
+        /// </summary>
+        /// <param name="source">Исходный массив.</param>
+        /// <param name="requiredLength">Требуемая длина нового массива.</param>
+        /// <returns>Интерполированный массив.</returns>
+        private double[] InterpolateArray(double[] source, int requiredLength)
+        {
+            int m = source.Length;
+            double[] destination = new double[requiredLength];
+
+            destination[0] = source[0];
+            destination[requiredLength - 1] = source[source.Length - 1];
+
+            for (int i = 1; i < requiredLength - 1; i++)
+            {
+                double jd = ((double)i * (double)(source.Length - 1) / (double)(requiredLength - 1));
+                int j = (int)jd;
+                destination[i] = source[j] + (source[j + 1] - source[j]) * (jd - (double)j);
+            }
+            return destination;
         }
 
         private Complex[] Fourea(Complex[] spectr, int n, int direct)

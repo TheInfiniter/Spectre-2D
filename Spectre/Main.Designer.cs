@@ -53,6 +53,9 @@
             this.btnFilter = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
+            this.labelWidth = new System.Windows.Forms.Label();
+            this.labelHeight = new System.Windows.Forms.Label();
+            this.btnStretch = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pcbInitial)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcbSpectre)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
@@ -65,7 +68,6 @@
             this.pcbInitial.Location = new System.Drawing.Point(12, 12);
             this.pcbInitial.Name = "pcbInitial";
             this.pcbInitial.Size = new System.Drawing.Size(402, 320);
-            this.pcbInitial.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pcbInitial.TabIndex = 0;
             this.pcbInitial.TabStop = false;
             // 
@@ -204,11 +206,11 @@
             // 
             // txtWidth
             // 
-            this.txtWidth.Location = new System.Drawing.Point(300, 357);
+            this.txtWidth.Location = new System.Drawing.Point(300, 383);
             this.txtWidth.Name = "txtWidth";
             this.txtWidth.Size = new System.Drawing.Size(34, 20);
             this.txtWidth.TabIndex = 12;
-            this.txtWidth.Text = "256";
+            this.txtWidth.Text = "128";
             // 
             // label6
             // 
@@ -221,11 +223,11 @@
             // 
             // txtHeight
             // 
-            this.txtHeight.Location = new System.Drawing.Point(300, 383);
+            this.txtHeight.Location = new System.Drawing.Point(300, 357);
             this.txtHeight.Name = "txtHeight";
             this.txtHeight.Size = new System.Drawing.Size(34, 20);
             this.txtHeight.TabIndex = 14;
-            this.txtHeight.Text = "256";
+            this.txtHeight.Text = "128";
             // 
             // label7
             // 
@@ -273,6 +275,7 @@
             this.btnFilter.TabIndex = 17;
             this.btnFilter.Text = "Фильтровать";
             this.btnFilter.UseVisualStyleBackColor = true;
+            this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
             // 
             // textBox1
             // 
@@ -291,11 +294,42 @@
             this.label9.Text = "Фильтр, %";
             this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // labelWidth
+            // 
+            this.labelWidth.Location = new System.Drawing.Point(878, 342);
+            this.labelWidth.Name = "labelWidth";
+            this.labelWidth.Size = new System.Drawing.Size(71, 23);
+            this.labelWidth.TabIndex = 12;
+            this.labelWidth.Text = "0";
+            this.labelWidth.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelHeight
+            // 
+            this.labelHeight.Location = new System.Drawing.Point(955, 342);
+            this.labelHeight.Name = "labelHeight";
+            this.labelHeight.Size = new System.Drawing.Size(71, 23);
+            this.labelHeight.TabIndex = 20;
+            this.labelHeight.Text = "0";
+            this.labelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // btnStretch
+            // 
+            this.btnStretch.Location = new System.Drawing.Point(540, 394);
+            this.btnStretch.Name = "btnStretch";
+            this.btnStretch.Size = new System.Drawing.Size(90, 49);
+            this.btnStretch.TabIndex = 21;
+            this.btnStretch.Text = "Растянуть";
+            this.btnStretch.UseVisualStyleBackColor = true;
+            this.btnStretch.Click += new System.EventHandler(this.btnStretch_Click);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1240, 450);
+            this.Controls.Add(this.btnStretch);
+            this.Controls.Add(this.labelHeight);
+            this.Controls.Add(this.labelWidth);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.btnFilter);
@@ -354,6 +388,9 @@
         private System.Windows.Forms.Button btnFilter;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label labelWidth;
+        private System.Windows.Forms.Label labelHeight;
+        private System.Windows.Forms.Button btnStretch;
     }
 }
 
