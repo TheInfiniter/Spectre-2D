@@ -33,7 +33,7 @@
             this.txtDomeAmount = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pcbSpectre = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pcbFilter = new System.Windows.Forms.PictureBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
@@ -51,14 +51,13 @@
             this.label8 = new System.Windows.Forms.Label();
             this.btnCreateSpectre = new System.Windows.Forms.Button();
             this.btnFilter = new System.Windows.Forms.Button();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.txtFilterPercent = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.labelWidth = new System.Windows.Forms.Label();
             this.labelHeight = new System.Windows.Forms.Label();
-            this.btnStretch = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pcbInitial)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcbSpectre)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pcbFilter)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,6 +67,7 @@
             this.pcbInitial.Location = new System.Drawing.Point(12, 12);
             this.pcbInitial.Name = "pcbInitial";
             this.pcbInitial.Size = new System.Drawing.Size(402, 320);
+            this.pcbInitial.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pcbInitial.TabIndex = 0;
             this.pcbInitial.TabStop = false;
             // 
@@ -87,7 +87,7 @@
             this.txtDomeAmount.Name = "txtDomeAmount";
             this.txtDomeAmount.Size = new System.Drawing.Size(34, 20);
             this.txtDomeAmount.TabIndex = 2;
-            this.txtDomeAmount.Text = "4";
+            this.txtDomeAmount.Text = "3";
             // 
             // label1
             // 
@@ -108,14 +108,15 @@
             this.pcbSpectre.TabIndex = 4;
             this.pcbSpectre.TabStop = false;
             // 
-            // pictureBox3
+            // pcbFilter
             // 
-            this.pictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pictureBox3.Location = new System.Drawing.Point(828, 12);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(402, 320);
-            this.pictureBox3.TabIndex = 5;
-            this.pictureBox3.TabStop = false;
+            this.pcbFilter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pcbFilter.Location = new System.Drawing.Point(828, 12);
+            this.pcbFilter.Name = "pcbFilter";
+            this.pcbFilter.Size = new System.Drawing.Size(402, 320);
+            this.pcbFilter.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pcbFilter.TabIndex = 5;
+            this.pcbFilter.TabStop = false;
             // 
             // groupBox1
             // 
@@ -160,7 +161,7 @@
             this.txtDispMax.Name = "txtDispMax";
             this.txtDispMax.Size = new System.Drawing.Size(34, 20);
             this.txtDispMax.TabIndex = 9;
-            this.txtDispMax.Text = "20";
+            this.txtDispMax.Text = "7";
             // 
             // txtAmpMax
             // 
@@ -176,7 +177,7 @@
             this.txtDispMin.Name = "txtDispMin";
             this.txtDispMin.Size = new System.Drawing.Size(34, 20);
             this.txtDispMin.TabIndex = 6;
-            this.txtDispMin.Text = "5";
+            this.txtDispMin.Text = "3";
             // 
             // label3
             // 
@@ -206,7 +207,7 @@
             // 
             // txtWidth
             // 
-            this.txtWidth.Location = new System.Drawing.Point(300, 383);
+            this.txtWidth.Location = new System.Drawing.Point(300, 357);
             this.txtWidth.Name = "txtWidth";
             this.txtWidth.Size = new System.Drawing.Size(34, 20);
             this.txtWidth.TabIndex = 12;
@@ -223,7 +224,7 @@
             // 
             // txtHeight
             // 
-            this.txtHeight.Location = new System.Drawing.Point(300, 357);
+            this.txtHeight.Location = new System.Drawing.Point(300, 383);
             this.txtHeight.Name = "txtHeight";
             this.txtHeight.Size = new System.Drawing.Size(34, 20);
             this.txtHeight.TabIndex = 14;
@@ -277,13 +278,13 @@
             this.btnFilter.UseVisualStyleBackColor = true;
             this.btnFilter.Click += new System.EventHandler(this.btnFilter_Click);
             // 
-            // textBox1
+            // txtFilterPercent
             // 
-            this.textBox1.Location = new System.Drawing.Point(417, 383);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(34, 20);
-            this.textBox1.TabIndex = 18;
-            this.textBox1.Text = "85";
+            this.txtFilterPercent.Location = new System.Drawing.Point(417, 383);
+            this.txtFilterPercent.Name = "txtFilterPercent";
+            this.txtFilterPercent.Size = new System.Drawing.Size(34, 20);
+            this.txtFilterPercent.TabIndex = 18;
+            this.txtFilterPercent.Text = "85";
             // 
             // label9
             // 
@@ -312,25 +313,14 @@
             this.labelHeight.Text = "0";
             this.labelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // btnStretch
-            // 
-            this.btnStretch.Location = new System.Drawing.Point(540, 394);
-            this.btnStretch.Name = "btnStretch";
-            this.btnStretch.Size = new System.Drawing.Size(90, 49);
-            this.btnStretch.TabIndex = 21;
-            this.btnStretch.Text = "Растянуть";
-            this.btnStretch.UseVisualStyleBackColor = true;
-            this.btnStretch.Click += new System.EventHandler(this.btnStretch_Click);
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1240, 450);
-            this.Controls.Add(this.btnStretch);
             this.Controls.Add(this.labelHeight);
             this.Controls.Add(this.labelWidth);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtFilterPercent);
             this.Controls.Add(this.label9);
             this.Controls.Add(this.btnFilter);
             this.Controls.Add(this.btnCreateSpectre);
@@ -341,7 +331,7 @@
             this.Controls.Add(this.txtWidth);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.pcbFilter);
             this.Controls.Add(this.pcbSpectre);
             this.Controls.Add(this.btnInitial);
             this.Controls.Add(this.pcbInitial);
@@ -353,7 +343,7 @@
             this.Text = "Main";
             ((System.ComponentModel.ISupportInitialize)(this.pcbInitial)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcbSpectre)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pcbFilter)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
@@ -368,7 +358,7 @@
         private System.Windows.Forms.TextBox txtDomeAmount;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pcbSpectre;
-        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pcbFilter;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox txtDispMin;
         private System.Windows.Forms.Label label3;
@@ -386,11 +376,10 @@
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button btnCreateSpectre;
         private System.Windows.Forms.Button btnFilter;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox txtFilterPercent;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label labelWidth;
         private System.Windows.Forms.Label labelHeight;
-        private System.Windows.Forms.Button btnStretch;
     }
 }
 
