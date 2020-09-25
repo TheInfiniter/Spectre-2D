@@ -63,11 +63,10 @@
             this.radioCreate = new System.Windows.Forms.RadioButton();
             this.btnStretch = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
-            this.dialogOpenFile = new System.Windows.Forms.OpenFileDialog();
+            this.chkLog = new System.Windows.Forms.CheckBox();
             this.groupBox6 = new System.Windows.Forms.GroupBox();
             this.btnSetNoise = new System.Windows.Forms.Button();
             this.labelSKO = new System.Windows.Forms.Label();
-            this.chkLog = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.pcbInitial)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcbSpectre)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pcbFilter)).BeginInit();
@@ -461,9 +460,16 @@
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Фильтрация";
             // 
-            // dialogOpenFile
+            // chkLog
             // 
-            this.dialogOpenFile.FileName = "dialogOpenFile";
+            this.chkLog.Location = new System.Drawing.Point(7, 89);
+            this.chkLog.Name = "chkLog";
+            this.chkLog.Size = new System.Drawing.Size(238, 24);
+            this.chkLog.TabIndex = 27;
+            this.chkLog.Text = "Логарифмический масштаб";
+            this.chkLog.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.chkLog.UseVisualStyleBackColor = true;
+            this.chkLog.CheckedChanged += new System.EventHandler(this.chkLog_CheckedChanged);
             // 
             // groupBox6
             // 
@@ -498,17 +504,6 @@
             this.labelSKO.TabIndex = 21;
             this.labelSKO.Text = "0";
             this.labelSKO.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // chkLog
-            // 
-            this.chkLog.Location = new System.Drawing.Point(7, 89);
-            this.chkLog.Name = "chkLog";
-            this.chkLog.Size = new System.Drawing.Size(238, 24);
-            this.chkLog.TabIndex = 27;
-            this.chkLog.Text = "Логарифмический масштаб";
-            this.chkLog.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.chkLog.UseVisualStyleBackColor = true;
-            this.chkLog.CheckedChanged += new System.EventHandler(this.chkLog_CheckedChanged);
             // 
             // Main
             // 
@@ -586,7 +581,6 @@
         private System.Windows.Forms.RadioButton radioCreate;
         private System.Windows.Forms.RadioButton radioUpload;
         private System.Windows.Forms.Button btnUpload;
-        private System.Windows.Forms.OpenFileDialog dialogOpenFile;
         private System.Windows.Forms.GroupBox groupBox6;
         private System.Windows.Forms.Button btnSetNoise;
         private System.Windows.Forms.Label labelSKO;

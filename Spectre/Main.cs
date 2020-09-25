@@ -190,8 +190,8 @@ namespace Spectre
             {
                 for (int j = 0; j < spectreHeight; j++)
                 {
-                    buffer = new Complex(interpolatePicture[j, i], 0);
-                    spectre[j, i] = buffer;
+                    buffer = new Complex(interpolatePicture[i, j], 0);
+                    spectre[i, j] = buffer;
                 }
             }
 
@@ -200,14 +200,14 @@ namespace Spectre
             {
                 for (int j = 0; j < spectreWidth; j++)
                 {
-                    line[j] = spectre[i, j];
+                    line[j] = spectre[j, i];
                 }
 
                 line = Fourea(line, spectreWidth, -1);
 
                 for (int j = 0; j < spectreWidth; j++)
                 {
-                    spectre[i, j] = line[j];
+                    spectre[j, i] = line[j];
                 }
             }
 
@@ -216,14 +216,14 @@ namespace Spectre
             {
                 for (int i = 0; i < spectreHeight; i++)
                 {
-                    column[i] = spectre[i, j];
+                    column[i] = spectre[j, i];
                 }
 
                 column = Fourea(column, spectreHeight, -1);
 
                 for (int i = 0; i < spectreHeight; i++)
                 {
-                    spectre[i, j] = column[i];
+                    spectre[j, i] = column[i];
                 }
             }
 
@@ -233,7 +233,7 @@ namespace Spectre
             {
                 for (int j = 0; j < spectre.GetLength(1); j++)
                 {
-                    spectreToDraw[j, i] = spectre[j, i];
+                    spectreToDraw[i, j] = spectre[i, j];
                 }
             }
 
@@ -250,7 +250,7 @@ namespace Spectre
             {
                 for (int j = 0; j < spectre.GetLength(1); j++)
                 {
-                    spectreBuffer[j, i] = spectre[j, i];
+                    spectreBuffer[i, j] = spectre[i, j];
                 }
             }
 
@@ -264,12 +264,12 @@ namespace Spectre
             {
                 for (int j = 0; j < spectre.GetLength(1); j++)
                 {
-                    energySpectreFull += Math.Pow(spectre[j, i].Magnitude, 2);
+                    energySpectreFull += Math.Pow(spectre[i, j].Magnitude, 2);
                 }
             }
 
             double energy = 0;
-            int radiusLast = (int)(spectreWidth / 2 * 1.4);
+            int radiusLast = (int)(spectreHeight / 2 * 1.4);
 
             for (int radius = 1; radius < spectreWidth / 2; radius++)
             {
@@ -279,10 +279,10 @@ namespace Spectre
                     {
                         if (Math.Sqrt(i * i + j * j) <= radius)
                         {
-                            energy += Math.Pow(spectre[j, i].Magnitude, 2);
-                            energy += Math.Pow(spectre[spectreHeight - 1 - j, i].Magnitude, 2);
-                            energy += Math.Pow(spectre[spectreHeight - 1 - j, spectreWidth - 1 - i].Magnitude, 2);
-                            energy += Math.Pow(spectre[j, spectreWidth - 1 - i].Magnitude, 2);
+                            energy += Math.Pow(spectre[i, j].Magnitude, 2);
+                            energy += Math.Pow(spectre[spectreWidth - 1 - i, j].Magnitude, 2);
+                            energy += Math.Pow(spectre[spectreWidth - 1 - i, spectreHeight - 1 - j].Magnitude, 2);
+                            energy += Math.Pow(spectre[i, spectreHeight - 1 - j].Magnitude, 2);
                         }
                     }
                 }
@@ -298,17 +298,18 @@ namespace Spectre
                 }
             }
 
+            buf = new Complex(0, 0);
+
             for (int i = 0; i < spectreWidth / 2; i++)
             {
                 for (int j = 0; j < spectreHeight / 2; j++)
                 {
                     if (Math.Sqrt(i * i + j * j) > radiusLast)
                     {
-                        buf = new Complex(0, 0);
-                        spectreBuffer[j, i] = spectre[j, i] = buf;
-                        spectreBuffer[j, i] = spectre[spectreHeight - 1 - j, i] = buf;
-                        spectreBuffer[j, i] = spectre[spectreHeight - 1 - j, spectreWidth - 1 - i] = buf;
-                        spectreBuffer[j, i] = spectre[j, spectreWidth - 1 - i] = buf;
+                        spectreBuffer[i, j] = spectre[i, j] = buf;
+                        spectreBuffer[spectreWidth - 1 - i, j] = spectre[spectreWidth - 1 - i, j] = buf;
+                        spectreBuffer[spectreWidth - 1 - i, spectreHeight - 1 - j] = spectre[spectreWidth - 1 - i, spectreHeight - 1 - j] = buf;
+                        spectreBuffer[i, spectreHeight - 1 - j] = spectre[i, spectreHeight - 1 - j] = buf;
                     }
                 }
             }
@@ -350,15 +351,30 @@ namespace Spectre
 
             double[,] filteredPicture = new double[spectreWidth, spectreHeight];
 
+            /*
             for (int i = 0; i < spectreWidth; i++)
             {
                 for (int j = 0; j < spectreHeight; j++)
                 {
-                    filteredPicture[j, i] = spectre[j + (int)(spectreHeight - picHeight) / 2, i + (int)(spectreWidth - picWidth) / 2].Magnitude;
+                    filteredPicture[i, j] = spectre[i + (int)(spectreWidth - picWidth) / 2, i + (int)(spectreHeight - picHeight) / 2].Magnitude;
+                }
+            }
+            */
+
+            double sko = 0;
+
+            for (int i = 0; i < spectreWidth; i++)
+            {
+                for (int j = 0; j < spectreHeight; j++)
+                {
+                    sko += Math.Pow(interpolatePicture[i, j] - spectre[i, j].Magnitude, 2);
                 }
             }
 
-            DrawMatrix(pcbFilter, filteredPicture, spectreHeight, spectreWidth);
+            labelSKO.Text = (sko / spectreWidth / spectreHeight).ToString("f6");
+
+            //DrawMatrix(pcbFilter, filteredPicture, spectreHeight, spectreWidth);
+            DrawMatrix(pcbFilter, ConvertToDraw(spectre, spectreHeight, spectreWidth), spectreHeight, spectreWidth);
         }
 
         private double[,] SetNoise(int width, int height, double[,] pic, double percent)
