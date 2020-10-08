@@ -38,7 +38,7 @@ namespace Spectre
 
         private void Main_Load(object sender, EventArgs e)
         {
-            radioUpload.Checked = true;
+            radioCreate.Checked = true;
         }
 
         private void btnInitial_Click(object sender, EventArgs e)
